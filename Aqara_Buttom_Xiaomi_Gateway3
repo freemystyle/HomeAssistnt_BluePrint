@@ -1,0 +1,88 @@
+blueprint:
+  name: Aqara Buttons All-In-One [XiaomiGateway3 Integration]
+  description: |
+   All-In-One package for Aqara Switches.
+  domain: automation
+  input:
+    action_sensor:
+      name: action sensor
+      description: Xiaomi Aqara wireless button
+      default: []     
+      selector:
+        entity:
+          integration: xiaomi_gateway3
+          domain: sensor
+    single_action:
+      name: Single Click
+      description: Single click for devices with one button
+      default: []
+      selector:
+        action: {}
+    double_action:
+      name: Double Click
+      description: Double click for devices with one button
+      default: []
+      selector:
+        action: {}
+    button_1_single_action:
+      name: Button 1 Single Click
+      description: Single click for devices with button one
+      default: []
+      selector:
+        action: {}
+    button_1_double_action:
+      name: Button 1 Double Click
+      description: Double click for devices with button one
+      default: []
+      selector:
+        action: {}
+    button_2_single_action:
+      name: Button 2 Single Click
+      description: Single click for devices with button two
+      default: []
+      selector:
+        action: {}
+    button_2_double_action:
+      name: Button 2 Double Click
+      description: Double click for devices with button two
+      default: []
+      selector:
+        action: {}
+    button_3_single_action:
+      name: Button 3 Single Click
+      description: Single click for devices with button three
+      default: []
+      selector:
+        action: {}
+    button_3_double_action:
+      name: Button 3 Double Click
+      description: Double click for devices with button three
+      default: []
+      selector:
+        action: {}
+mode: restart
+max_exceeded: silent
+trigger:
+  platform: state
+  entity_id: !input 'action_sensor'
+
+action:
+- variables:
+    command: '{{ trigger.to_state.state if trigger.to_state.state == "" else trigger.to_state.state }}'
+- choose:
+  - conditions: '{{ command == "single" }}'
+    sequence: !input 'single_action'
+  - conditions: '{{ command == "double" }}'
+    sequence: !input 'double_action'
+  - conditions: '{{ command == "button_1_single" }}'
+    sequence: !input 'button_1_single_action'
+  - conditions: '{{ command == "button_1_double" }}'
+    sequence: !input 'button_1_double_action'
+  - conditions: '{{ command == "button_2_single" }}'
+    sequence: !input 'button_2_single_action'
+  - conditions: '{{ command == "button_2_double" }}'
+    sequence: !input 'button_2_double_action'
+  - conditions: '{{ command == "button_3_single" }}'
+    sequence: !input 'button_3_single_action'
+  - conditions: '{{ command == "button_3_double" }}'
+    sequence: !input 'button_3_double_action'
