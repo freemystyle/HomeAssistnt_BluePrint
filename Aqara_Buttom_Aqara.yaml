@@ -1,0 +1,59 @@
+blueprint:
+  name: Aqara Buttons All-In-One [Aqara Integration]
+  description: |
+   All-In-One package for Aqara Switches.
+  domain: automation
+  input:
+    action_sensor:
+      name: action sensor
+      description: Xiaomi Aqara wireless button
+      default: []     
+      selector:
+        entity:
+          integration: xiaomi_aqara
+          domain: binary_sensor
+    single_action:
+      name: Single Click
+      description: Single click for devices with one button
+      default: []
+      selector:
+        action: {}
+    double_action:
+      name: Double Click
+      description: Double click for devices with one button
+      default: []
+      selector:
+        action: {}
+    long_action:
+      name: Long Click
+      description: Long click for devices with one button
+      default: []
+      selector:
+        action: {}
+    both_action:
+      name: Both Click
+      description: Both click for devices with one button
+      default: []
+      selector:
+        action: {}
+mode: restart
+max_exceeded: silent
+trigger:
+  platform: event
+  event_type: xiaomi_aqara.click
+  event_data:
+    entity_id: !input 'action_sensor'
+action:
+- variables:
+    command: '{{ trigger.event.data.click_type }}'
+- choose:
+  - conditions: '{{ command == "single" }}'
+    sequence: !input 'single_action'
+  - conditions: '{{ command == "double" }}'
+    sequence: !input 'double_action'
+  - conditions: '{{ command == "long"  }}'
+    sequence: !input 'long_action'
+  - conditions: '{{ command == "hold"  }}'
+    sequence: !input 'long_action'
+  - conditions: '{{ command == "both"  }}'
+    sequence: !input 'both_action'
